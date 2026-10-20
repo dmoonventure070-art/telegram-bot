@@ -25,6 +25,7 @@ import {
   type DecodedEvent,
 } from "../stellar/decode.js";
 import { appUrlFor } from "./app-links.js";
+import { iconForCategory } from "./category-icons.js";
 import { groupDigestEvents } from "./digest-grouping.js";
 import { confidenceIndicator } from "./confidence.js";
 import { settlementLines } from "./settlement.js";
@@ -379,12 +380,16 @@ function headline(event: DecodedEvent, nowMs?: number): string | null {
 
   switch (p.name) {
     // ── mimir-market ────────────────────────────────────────────────────────
-    case "claim_created":
+    case "claim_created": {
+      const icon = iconForCategory(p.category);
+      const cat = escapeMd(clip(p.category));
+      const formattedCategory = cat ? `${icon} ${cat}` : icon;
       return NOTIFICATION_MD.claimCreated(
         String(p.claimId),
-        escapeMd(clip(p.category)),
+        formattedCategory,
         who(p.creator),
       );
+    }
 
     case "claim_challenged":
       return NOTIFICATION_MD.claimChallenged(
@@ -569,8 +574,12 @@ function plainHeadline(event: DecodedEvent, nowMs?: number): string | null {
 
   switch (p.name) {
     // ── mimir-market ────────────────────────────────────────────────────────
-    case "claim_created":
-      return NOTIFICATION_PLAIN.claimCreated(p.claimId, clip(p.category), plainWho(p.creator));
+    case "claim_created": {
+      const icon = iconForCategory(p.category);
+      const cat = clip(p.category);
+      const formattedCategory = cat ? `${icon} ${cat}` : icon;
+      return NOTIFICATION_PLAIN.claimCreated(p.claimId, formattedCategory, plainWho(p.creator));
+    }
 
     case "claim_challenged":
       return NOTIFICATION_PLAIN.claimChallenged(

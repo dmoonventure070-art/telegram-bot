@@ -136,7 +136,7 @@ test("formatted untrusted event text reaches Telegram as exact MarkdownV2", asyn
   };
   const message = formatEvent(config, event);
   const expectedMessage =
-    `🆕 *New claim* \\#7\nCategory: ${expectedEscape(reserved)}\n` +
+    `🆕 *New claim* \\#7\nCategory: 🏷️ ${expectedEscape(reserved)}\n` +
     "Creator: `GABCD`\n_ledger 42_";
   const sent = [];
   const fakeBot = {
@@ -185,7 +185,7 @@ test("oversized event fields are clipped safely before MarkdownV2 escaping", () 
 
   const message = formatEvent(config, event);
   const expectedMessage =
-    `🆕 *New claim* \\#7\nCategory: ${"a".repeat(199)}…\n` +
+    `🆕 *New claim* \\#7\nCategory: 🏷️ ${"a".repeat(199)}…\n` +
     "Creator: `GABCD`\n_ledger 42_";
 
   assert.equal(message, expectedMessage);
